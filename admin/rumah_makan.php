@@ -1,0 +1,9 @@
+<?php
+require_once 'auth.php'; require_once '../koneksi.php';
+$rows=$conn->query("SELECT r.*, (SELECT ROUND(AVG(rating),1) FROM ulasan WHERE rumah_makan_id=r.id) rating FROM rumah_makan r ORDER BY r.id DESC");
+?>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Data Rumah Makan</title><link rel="stylesheet" href="../assets/css/style.css"></head><body class="admin-page"><aside class="admin-sidebar"><a class="brand" href="dashboard.php"><span class="brand-icon">🍽</span><span>Jelajah<span class="brand-light">Kuliner</span><small>ADMIN PANEL</small></span></a><div class="admin-nav"><a href="dashboard.php">▦ Dashboard</a><a class="active" href="rumah_makan.php">⌖ Data Rumah Makan</a><a href="ulasan.php">☆ Ulasan</a></div><a class="logout-link" href="logout.php">Keluar ↗</a></aside>
+<main class="admin-main"><header class="admin-header"><div><div class="eyebrow">MANAJEMEN DATA</div><h1>Data Rumah Makan</h1><p class="muted">Atur informasi dan titik koordinat lokasi.</p></div><a class="primary-button" href="tambah.php">+ Tambah Rumah Makan</a></header>
+<div class="table-card"><div class="table-scroll"><table><thead><tr><th>Rumah Makan</th><th>Alamat</th><th>Koordinat</th><th>Rating</th><th>Aksi</th></tr></thead><tbody>
+<?php while($r=$rows->fetch_assoc()): ?><tr><td><div class="table-name"><?= e($r['nama']) ?></div><small><?= e($r['kategori']) ?></small></td><td><?= e($r['alamat']) ?></td><td><small><?= e($r['latitude']) ?>, <?= e($r['longitude']) ?></small></td><td>★ <?= $r['rating'] ? e($r['rating']) : '—' ?></td><td class="actions"><a href="edit.php?id=<?= (int)$r['id'] ?>">Edit</a><a class="danger-link" href="hapus.php?id=<?= (int)$r['id'] ?>" onclick="return confirm('Hapus rumah makan ini beserta ulasannya?')">Hapus</a></td></tr><?php endwhile; ?>
+</tbody></table></div></div></main></body></html>
